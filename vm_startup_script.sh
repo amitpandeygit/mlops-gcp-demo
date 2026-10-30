@@ -5,8 +5,10 @@ if [ ! -f /swapfile ]; then
   fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile
 fi
 swapon /swapfile 2>/dev/null
-if [ ! -d /opt/mlenv ]; then
-  apt-get update -y && apt-get install -y python3-venv
+if [ ! -x /opt/mlenv/bin/mlflow ]; then
+  rm -rf /opt/mlenv
+  apt-get -o DPkg::Lock::Timeout=600 update -y
+  apt-get -o DPkg::Lock::Timeout=600 install -y python3-venv
   python3 -m venv /opt/mlenv
   /opt/mlenv/bin/pip install mlflow==2.19.0 sqlalchemy==2.0.36 google-cloud-storage
 fi
